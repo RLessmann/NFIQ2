@@ -181,3 +181,17 @@ ExternalProject_Add(nfiq2api
 	INSTALL_DIR ${DIST_PATH}
 )
 ExternalProject_Add_StepDependencies(nfiq2api build nfiq2)
+
+ExternalProject_Add(nfiq2training
+	SOURCE_DIR	${ROOT_PATH}/NFIQ2/NFIQ2Training
+	CMAKE_ARGS
+		-DSUPERBUILD_ROOT_PATH=${ROOT_PATH}
+		-DCMAKE_CONFIGURATION_TYPES=${CMAKE_CONFIGURATION_TYPES}
+		${COMPILER_CMAKE_ARGS}
+		-DCMAKE_INSTALL_PREFIX=${DIST_PATH}
+		${ANDROID_CMAKE_ARGS}
+		${IOS_CMAKE_ARGS}
+	BUILD_ALWAYS	YES
+	INSTALL_DIR ${DIST_PATH}
+)
+ExternalProject_Add_StepDependencies(nfiq2training build nfiq2api)
