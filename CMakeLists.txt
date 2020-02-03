@@ -11,7 +11,7 @@ set( BUILD_PATH  ${CMAKE_CURRENT_BINARY_DIR} )
 if (NOT DEFINED OPENCV_VERSION)
 set( OPENCV_VERSION "2.4.13.6")
 #set( OPENCV_VERSION "3.4.8")
-#set( OPENCV_VERSION "4.1.2")
+#set( OPENCV_VERSION "4.2.0")
 endif (NOT DEFINED OPENCV_VERSION)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -86,6 +86,16 @@ if( APPLE AND NOT ( "${CMAKE_TOOLCHAIN_FILE}" STREQUAL ""))
 endif()
 
 include(ExternalProject)
+
+ExternalProject_Add(astyle
+	URL	https://sourceforge.net/projects/astyle/files/latest/download
+	CMAKE_ARGS
+		${COMPILER_CMAKE_ARGS}
+		${OUTPUT_CMAKE_ARGS}
+		${ANDROID_CMAKE_ARGS}
+		${IOS_CMAKE_ARGS}
+	INSTALL_COMMAND	""
+)
 
 set(OPENCV_CMAKE_ARGS
 	-DBUILD_SHARED_LIBS=OFF
@@ -163,7 +173,7 @@ ExternalProject_Add(nfiq2
 	BUILD_ALWAYS	YES
 	INSTALL_DIR ${DIST_PATH}
 )
-ExternalProject_Add_StepDependencies(nfiq2 build astyle format OpenCV biomdi fmr FRFXLL_static)
+ExternalProject_Add_StepDependencies(nfiq2 build astyle OpenCV biomdi fmr FRFXLL_static)
 
 ExternalProject_Add(nfiq2api
 	SOURCE_DIR	${ROOT_PATH}/NFIQ2/NFIQ2Api
