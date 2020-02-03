@@ -28,9 +28,6 @@ include( "${ROOT_PATH}/cmake/compiler.cmake" )
 # create build and distribution path
 include( "${ROOT_PATH}/cmake/folders.cmake" )
 
-# setup astyle
-include( "${ROOT_PATH}/cmake/astyle.cmake" )
-
 # include special settings for fingerjetfxose
 include( "${ROOT_PATH}/cmake/fingerjetfxose.cmake" )
 
