@@ -25,7 +25,7 @@
 #define QUALITY_SCORE_NOT_AVAILABLE 255
 
 #if defined(__linux) && defined(__i386__)
-void set_fpu ( unsigned int mode )
+void set_fpu( unsigned int mode )
 {
   asm( "fldcw %0" : : "m"(*& mode ) );
 }
@@ -37,7 +37,7 @@ using namespace std;
 using namespace cv;
 
 #ifdef EMBED_RANDOMFOREST_PARAMETERS
-NFIQ2Algorithm::Impl::Impl ()
+NFIQ2Algorithm::Impl::Impl()
 {
 #if defined(__linux) && defined(__i386__)
   set_fpu( 0x27F ); /* use double-precision rounding */
@@ -47,7 +47,7 @@ NFIQ2Algorithm::Impl::Impl ()
 }
 #endif
 
-NFIQ2Algorithm::Impl::Impl ( const std::string& fileName, const std::string& fileHash )
+NFIQ2Algorithm::Impl::Impl( const std::string& fileName, const std::string& fileHash )
 {
 #if defined(__linux) && defined(__i386__)
   set_fpu( 0x27F ); /* use double-precision rounding */
@@ -56,14 +56,14 @@ NFIQ2Algorithm::Impl::Impl ( const std::string& fileName, const std::string& fil
   this->m_parameterHash = m_RandomForestML.initModule( fileName, fileHash );
 }
 
-NFIQ2Algorithm::Impl::~Impl ()
+NFIQ2Algorithm::Impl::~Impl()
 {
 }
 
-std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures (
+std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures(
   const NFIQ::FingerprintImageData& rawImage,
   bool bComputeActionableQuality, std::list<NFIQ::ActionableQualityFeedback>& actionableQuality,
-  bool bOutputSpeed, std::list<NFIQ::QualityFeatureSpeed>& speedValues )
+  bool bOutputSpeed, std::list<NFIQ::QualityFeatureSpeed>& qualityFeatureSpeed )
 {
   std::list<NFIQ::QualityFeatureData> featureVector;
 
@@ -74,7 +74,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // compute contrast features
   // MMB
   // Mu
-  MuFeature muFeatureModule( bOutputSpeed, speedValues );
+  MuFeature muFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   double sigma = 255.0;
   std::list<NFIQ::QualityFeatureResult> muFeatures = muFeatureModule.computeFeatureData( rawImage, sigma );
 
@@ -118,7 +118,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // FDA_Bin10_[0-9]
   // FDA_Bin10_Mean
   // FDA_Bin10_StdDev
-  FDAFeature fdaFeatureModule( bOutputSpeed, speedValues );
+  FDAFeature fdaFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   std::list<NFIQ::QualityFeatureResult> fdaFeatures = fdaFeatureModule.computeFeatureData( rawImage );
 
   // append to feature vector
@@ -140,7 +140,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // compute FJFX features
   // FingerJetFX_MinCount_COMMinRect200x200
   // FingerJetFX_MinutiaeCount
-  FingerJetFXFeature fjfxFeatureModule( bOutputSpeed, speedValues );
+  FingerJetFXFeature fjfxFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   // this module returns the FJFX minutiae template to be used in other modules
   unsigned char fjfxTemplateData[4096]; // allocate 4KB of memory for template
   size_t fjfxTemplateSize = sizeof( fjfxTemplateData );
@@ -181,7 +181,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // compute FJFX minutiae quality features
   // FJFXPos_Mu_MinutiaeQuality_2
   // FJFXPos_OCL_MinutiaeQuality_80
-  FJFXMinutiaeQualityFeature fjfxMinQualFeatureModule( bOutputSpeed, speedValues );
+  FJFXMinutiaeQualityFeature fjfxMinQualFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   // this module uses the already computed FJFX minutiae template
   std::list<NFIQ::QualityFeatureResult> fjfxMinQualFeatures = fjfxMinQualFeatureModule.computeFeatureData( rawImage, fjfxTemplateData, fjfxTemplateSize, templateCouldBeExtracted );
 
@@ -203,7 +203,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
 
   // compute ROI features
   // ImgProcROIArea_Mean
-  ImgProcROIFeature roiFeatureModule( bOutputSpeed, speedValues );
+  ImgProcROIFeature roiFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   // this module returns ROI information to be used within other modules
   ImgProcROIFeature::ImgProcROIResults imgProcResults;
   std::list<NFIQ::QualityFeatureResult> roiFeatures = roiFeatureModule.computeFeatureData( rawImage, imgProcResults );
@@ -234,7 +234,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // LCS_Bin10_[0-9]
   // LCS_Bin10_Mean
   // LCS_Bin10_StdDev
-  LCSFeature lcsFeatureModule( bOutputSpeed, speedValues );
+  LCSFeature lcsFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   std::list<NFIQ::QualityFeatureResult> lcsFeatures = lcsFeatureModule.computeFeatureData( rawImage );
 
   // append to feature vector
@@ -276,7 +276,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // OCL_Bin10_[0-9]
   // OCL_Bin10_Mean
   // OCL_Bin10_StdDev
-  OCLHistogramFeature oclFeatureModule( bOutputSpeed, speedValues );
+  OCLHistogramFeature oclFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   std::list<NFIQ::QualityFeatureResult> oclFeatures = oclFeatureModule.computeFeatureData( rawImage );
 
   // append to feature vector
@@ -299,7 +299,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // OF_Bin10_[0-9]
   // OF_Bin10_Mean
   // OF_Bin10_StdDev
-  OFFeature ofFeatureModule( bOutputSpeed, speedValues );
+  OFFeature ofFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   std::list<NFIQ::QualityFeatureResult> ofFeatures = ofFeatureModule.computeFeatureData( rawImage );
 
   // append to feature vector
@@ -321,7 +321,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // compute quality map features
   // OrientationMap_ROIFilter_CoherenceRel
   // OrientationMap_ROIFilter_CoherenceSum
-  QualityMapFeatures qmFeatureModule( bOutputSpeed, speedValues );
+  QualityMapFeatures qmFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   std::list<NFIQ::QualityFeatureResult> qmFeatures = qmFeatureModule.computeFeatureData( rawImage, imgProcResults );
 
   // append to feature vector
@@ -344,7 +344,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   // RVUP_Bin10_[0-9]
   // RVUP_Bin10_Mean
   // RVUP_Bin10_StdDev
-  RVUPHistogramFeature rvupFeatureModule( bOutputSpeed, speedValues );
+  RVUPHistogramFeature rvupFeatureModule( bOutputSpeed, qualityFeatureSpeed );
   std::list<NFIQ::QualityFeatureResult> rvupFeatures = rvupFeatureModule.computeFeatureData( rawImage );
 
   // append to feature vector
@@ -366,7 +366,7 @@ std::list<NFIQ::QualityFeatureData> NFIQ2Algorithm::Impl::computeQualityFeatures
   return featureVector;
 }
 
-double NFIQ2Algorithm::Impl::getQualityPrediction ( std::list<NFIQ::QualityFeatureData>& featureVector )
+double NFIQ2Algorithm::Impl::getQualityPrediction( std::list<NFIQ::QualityFeatureData>& featureVector )
 {
   const double utility = 0.0;
   double deviation = 0.0;
@@ -376,7 +376,7 @@ double NFIQ2Algorithm::Impl::getQualityPrediction ( std::list<NFIQ::QualityFeatu
   return quality;
 }
 
-unsigned int NFIQ2Algorithm::Impl::computeQualityScore (
+unsigned int NFIQ2Algorithm::Impl::computeQualityScore(
   NFIQ::FingerprintImageData rawImage,
   bool bComputeActionableQuality, std::list<NFIQ::ActionableQualityFeedback>& actionableQuality,
   bool bOutputFeatures, std::list<NFIQ::QualityFeatureData>& qualityFeatureData,
@@ -428,7 +428,7 @@ unsigned int NFIQ2Algorithm::Impl::computeQualityScore (
 }
 
 std::string
-NFIQ2Algorithm::Impl::getParameterHash ()
+NFIQ2Algorithm::Impl::getParameterHash()
 const
 {
   return ( this->m_parameterHash );

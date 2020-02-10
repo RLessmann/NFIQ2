@@ -7,6 +7,3 @@
 [submodule "biomdi/biomdi"]
 	path = biomdi/biomdi
 	url = https://github.com/usnistgov/biomdi.git
-[submodule "NFIQ2/NFIQ2Training"]
-	path = NFIQ2/NFIQ2Training
-	url = https://github.com/RLessmann/NFIQ2Training.git

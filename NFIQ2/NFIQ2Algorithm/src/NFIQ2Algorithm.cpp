@@ -2,13 +2,13 @@
 #include "NFIQ2AlgorithmImpl.h"
 
 #ifdef EMBED_RANDOMFOREST_PARAMETERS
-NFIQ::NFIQ2Algorithm::NFIQ2Algorithm ()
+NFIQ::NFIQ2Algorithm::NFIQ2Algorithm()
 {
   this->pimpl.reset( new NFIQ::NFIQ2Algorithm::Impl() );
 }
 #endif
 
-NFIQ::NFIQ2Algorithm::NFIQ2Algorithm (
+NFIQ::NFIQ2Algorithm::NFIQ2Algorithm(
   const std::string& fileName,
   const std::string& fileHash )
 {
@@ -16,7 +16,7 @@ NFIQ::NFIQ2Algorithm::NFIQ2Algorithm (
 }
 
 unsigned int
-NFIQ::NFIQ2Algorithm::computeQualityScore (
+NFIQ::NFIQ2Algorithm::computeQualityScore(
   NFIQ::FingerprintImageData rawImage,
   bool bComputeActionableQuality,
   std::list<NFIQ::ActionableQualityFeedback>& actionableQuality,
@@ -35,11 +35,23 @@ NFIQ::NFIQ2Algorithm::computeQualityScore (
              qualityFeatureSpeed ) );
 }
 
+std::list<NFIQ::QualityFeatureData> NFIQ::NFIQ2Algorithm::computeQualityFeatures(
+  const NFIQ::FingerprintImageData& rawImage )
+{
+	std::list<NFIQ::ActionableQualityFeedback> actionableQuality;
+	std::list<NFIQ::QualityFeatureSpeed> qualityFeatureSpeed;
+  
+	return ( this->pimpl->computeQualityFeatures(
+			rawImage,
+			false, actionableQuality,
+			false, qualityFeatureSpeed ) );
+}
+
 std::string
-NFIQ::NFIQ2Algorithm::getParameterHash ()
+NFIQ::NFIQ2Algorithm::getParameterHash()
 const
 {
   return ( this->pimpl->getParameterHash() );
 }
 
-NFIQ::NFIQ2Algorithm::~NFIQ2Algorithm () = default;
+NFIQ::NFIQ2Algorithm::~NFIQ2Algorithm() = default;
