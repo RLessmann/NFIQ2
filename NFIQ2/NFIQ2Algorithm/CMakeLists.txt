@@ -111,10 +111,18 @@ if("${TARGET_PLATFORM}" MATCHES "win*")
     )
   endif()
 elseif("${TARGET_PLATFORM}" MATCHES "android*")
+  add_definitions("-DEMBED_RANDOMFOREST_PARAMETERS")
   find_package(Threads REQUIRED)
   set( PROJECT_LIBS ${PROJECT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     log
+    ${CMAKE_DL_LIBS}
+  )
+elseif("${TARGET_PLATFORM}" MATCHES "ios*")
+  add_definitions("-DEMBED_RANDOMFOREST_PARAMETERS")
+  find_package(Threads REQUIRED)
+  set( PROJECT_LIBS ${PROJECT_LIBS}
+    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
   )
 else()
@@ -128,7 +136,8 @@ endif()
 target_link_libraries( ${NFIQ2_TEST_APP} ${PROJECT_LIBS} ${OpenCV_LIBS} )
 
 install(TARGETS ${NFIQ2_TEST_APP} 
-    RUNTIME DESTINATION bin)
+    RUNTIME DESTINATION bin
+    BUNDLE DESTINATION bin)
 install(TARGETS ${PROJECT_NAME} 
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
