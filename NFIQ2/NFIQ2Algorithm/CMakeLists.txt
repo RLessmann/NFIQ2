@@ -55,6 +55,10 @@ set(PUBLIC_HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/include/NFIQException.h"
 )
 
+if("${TARGET_PLATFORM}" MATCHES "ios*" OR "${TARGET_PLATFORM}" MATCHES "android*")
+  add_definitions("-DEMBED_RANDOMFOREST_PARAMETERS")
+endif()
+
 add_library( ${PROJECT_NAME} STATIC
   ${SOURCE_FILES}
   ${FEATURES_FILES}
@@ -111,18 +115,10 @@ if("${TARGET_PLATFORM}" MATCHES "win*")
     )
   endif()
 elseif("${TARGET_PLATFORM}" MATCHES "android*")
-  add_definitions("-DEMBED_RANDOMFOREST_PARAMETERS")
   find_package(Threads REQUIRED)
   set( PROJECT_LIBS ${PROJECT_LIBS}
     ${CMAKE_THREAD_LIBS_INIT}
     log
-    ${CMAKE_DL_LIBS}
-  )
-elseif("${TARGET_PLATFORM}" MATCHES "ios*")
-  add_definitions("-DEMBED_RANDOMFOREST_PARAMETERS")
-  find_package(Threads REQUIRED)
-  set( PROJECT_LIBS ${PROJECT_LIBS}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
   )
 else()
