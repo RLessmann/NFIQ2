@@ -119,7 +119,7 @@ fi
 
 #ios
 if [ "${target:0:3}" == "ios" ]; then
-	cfg="-DCMAKE_TOOLCHAIN_FILE='./cmake/ios.toolchain.cmake'"
+	cfg="-DCMAKE_TOOLCHAIN_FILE='$(pwd)/cmake/ios.toolchain.cmake'"
   xtraflags="-DENABLE_ARC=FALSE"
 fi
 
