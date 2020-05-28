@@ -36,3 +36,5 @@ elseif( UNIX )
     set(TARGET_PLATFORM "linux32")
   endif()
 endif()
+
+message( -- "Set target platfomr to ${TARGET_PLATFORM}")
