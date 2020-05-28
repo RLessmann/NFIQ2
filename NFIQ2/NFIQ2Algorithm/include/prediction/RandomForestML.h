@@ -17,8 +17,6 @@
 #include <opencv2/ml.hpp>
 #endif /* CV_MAJOR_VERSION */
 
-#undef EMBED_RANDOMFOREST_PARAMETERS
-
 class RandomForestML
 {
 

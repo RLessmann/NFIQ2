@@ -2,6 +2,7 @@
 #include "include/NFIQException.h"
 
 #ifdef EMBED_RANDOMFOREST_PARAMETERS
+# pragma message("Embedding Random Forest Parameters")
 # include "RandomForestTrainedParams.h"
 #endif
 
