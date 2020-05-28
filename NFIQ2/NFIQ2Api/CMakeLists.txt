@@ -40,6 +40,10 @@ include( "${SUPERBUILD_ROOT_PATH}/NFIQ2/version.cmake" )
 
 link_directories( "${CMAKE_INSTALL_PREFIX}/lib" "${CMAKE_INSTALL_PREFIX}" )
 
+if("${TARGET_PLATFORM}" MATCHES "ios*" OR "${TARGET_PLATFORM}" MATCHES "android*")
+  add_definitions("-DEMBED_RANDOMFOREST_PARAMETERS")
+endif()
+
 # add targets
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_library( ${PROJECT_NAME} SHARED

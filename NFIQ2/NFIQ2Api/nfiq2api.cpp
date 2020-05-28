@@ -88,6 +88,7 @@ extern "C" {
       if( g_nfiq2.get() == nullptr )
       {
 #       ifdef EMBED_RANDOMFOREST_PARAMETERS
+#       pragma message("Embedding Random Forest Parameters")
         g_nfiq2 = std::unique_ptr<NFIQ::NFIQ2Algorithm>( new NFIQ::NFIQ2Algorithm() );
 #       else
         g_nfiq2 = std::unique_ptr<NFIQ::NFIQ2Algorithm>( new NFIQ::NFIQ2Algorithm( GetYamlFilePath(), "0xccd75820b48c19f1645ef5e9c481c592" ) );
