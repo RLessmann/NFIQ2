@@ -143,15 +143,21 @@ NFIQ2::Prediction::RandomForestML::initModule(AAssetManager* assets,
     if( fileName == std::string( file ) )
     {
       AAsset* asset = AAssetManager_open( assets, file, AASSET_MODE_STREAMING );
-      char buffer[BUFSIZ + 1];
-      memset( buffer, 0, BUFSIZ + 1 );
+	  char buffer[BUFSIZ + 1]; // BUFSIZ defined in stdio.h
       std::stringstream ss;
-      while( AAsset_read( asset, buffer, BUFSIZ ) > 0 )
+	  int cnt = AAsset_read( asset, buffer, BUFSIZ );
+      while( cnt > 0  && cnt <= BUFSIZ )
       {
-        ss << buffer;
+        buffer[cnt] = 0; // add terminating '\0'
+		ss << buffer;
+	  	cnt = AAsset_read( asset, buffer, BUFSIZ );
       }
       params = ss.str();
       AAsset_close( asset );
+      ss.str( std::string() );
+	  ss.clear();
+	  ss << "Read " << params.size() << " bytes from model file " << file;
+  	  __android_log_write( ANDROID_LOG_INFO, "NFIQ2::Prediction::RandomForestML", ss.str().c_str() );
       break;
     }
   }
@@ -161,6 +167,7 @@ NFIQ2::Prediction::RandomForestML::initModule(AAssetManager* assets,
 		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
 		    "The trained network could not be initialized!");
   }
+	
 	initModule(params);
 	// calculate and compare the hash
 	std::string hash = calculateHashString(params);
