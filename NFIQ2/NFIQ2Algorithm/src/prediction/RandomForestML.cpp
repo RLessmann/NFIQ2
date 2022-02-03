@@ -131,34 +131,31 @@ NFIQ2::Prediction::RandomForestML::initModule(AAssetManager *assets,
 	if (assets == nullptr) {
 		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
 		    "Prediction::RandomForestML::initModule: AAssetManager is "
-        "null");
+		    "null");
 	}
 	const char *file = nullptr;
 	std::string params;
-  //AAssetDir *assetDir = AAssetManager_openDir(assets, "");
-  AAsset *asset = AAssetManager_open(assets, file, AASSET_MODE_STREAMING);
-  if(asset == nullptr) {
+	AAsset *asset = AAssetManager_open(assets, file, AASSET_MODE_STREAMING);
+	if (asset == nullptr) {
 		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
 		    "Prediction::RandomForestML::initModule: Requested asset not found");
-  }
-  // reading the file with the asset manager
-  char buffer[BUFSIZ + 1]; // BUFSIZ defined in stdio.h
-  std::stringstream ss;
-  int cnt = AAsset_read( asset, buffer, BUFSIZ );
-  while( cnt > 0  && cnt <= BUFSIZ )
-  {
-    ss << buffer;
-    buffer[cnt] = 0; // add terminating '\0'
-    cnt = AAsset_read( asset, buffer, BUFSIZ );
-  }
-  params = ss.str();
-  AAsset_close( asset );
-	//AAssetDir_close(assetDir);
-  // verify the read data and initialize model
-  if (params.size() == 0) {
+	}
+	// reading the file with the asset manager
+	char buffer[BUFSIZ + 1]; // BUFSIZ defined in stdio.h
+	std::stringstream ss;
+	int cnt = AAsset_read(asset, buffer, BUFSIZ);
+	while (cnt > 0 && cnt <= BUFSIZ) {
+		ss << buffer;
+		buffer[cnt] = 0; // add terminating '\0'
+		cnt = AAsset_read(asset, buffer, BUFSIZ);
+	}
+	params = ss.str();
+	AAsset_close(asset);
+	// verify the read data and initialize model
+	if (params.size() == 0) {
 		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
 		    "The trained network could not be initialized!"
-        "Invalid model");
+		    "Invalid model");
 	}
 	initModule(params);
 	// calculate and compare the hash
