@@ -129,35 +129,43 @@ NFIQ2::Prediction::RandomForestML::initModule(AAssetManager *assets,
     const std::string &fileName, const std::string &fileHash)
 {
 	if (assets == nullptr) {
-		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
-		    "Prediction::RandomForestML::initModule: AAssetManager is "
-		    "null");
+		throw NFIQ2::Exception(NFIQ2::ErrorCode::BadArguments,
+		    "Prediction::RandomForestML::initModule: AAssetManager is null");
 	}
-	const char *file = nullptr;
-	std::string params;
-	AAsset *asset = AAssetManager_open(assets, file, AASSET_MODE_STREAMING);
+	if (fileName.empty()) {
+		throw NFIQ2::Exception(NFIQ2::ErrorCode::BadArguments,
+		    "Prediction::RandomForestML::initModule: "
+		    "file name is empty");
+	}
+	if (fileHash.empty()) {
+		throw NFIQ2::Exception(NFIQ2::ErrorCode::BadArguments,
+		    "Prediction::RandomForestML::initModule: "
+		    "hash value is empty");
+	}
+	AAsset *asset = AAssetManager_open(
+	    assets, fileName.c_str(), AASSET_MODE_STREAMING);
 	if (asset == nullptr) {
 		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
-		    "Prediction::RandomForestML::initModule: Requested asset not found");
+		    "Prediction::RandomForestML::initModule: "
+		    "requested asset not found");
 	}
 	// reading the file with the asset manager
-	char buffer[BUFSIZ + 1]; // BUFSIZ defined in stdio.h
 	std::stringstream ss;
+	char buffer[BUFSIZ + 1]; // BUFSIZ defined in stdio.h
 	int cnt = AAsset_read(asset, buffer, BUFSIZ);
 	while (cnt > 0 && cnt <= BUFSIZ) {
-		ss << buffer;
 		buffer[cnt] = 0; // add terminating '\0'
+		ss << buffer;
 		cnt = AAsset_read(asset, buffer, BUFSIZ);
 	}
-	params = ss.str();
 	AAsset_close(asset);
 	// verify the read data and initialize model
+	std::string params = ss.str();
 	if (params.size() == 0) {
 		throw NFIQ2::Exception(NFIQ2::ErrorCode::InvalidConfiguration,
 		    "The trained network could not be initialized!"
 		    "Invalid model");
 	}
-	initModule(params);
 	// calculate and compare the hash
 	std::string hash = calculateHashString(params);
 	if (fileHash.compare(hash) != 0) {
@@ -167,6 +175,7 @@ NFIQ2::Prediction::RandomForestML::initModule(AAssetManager *assets,
 		    "Error: " +
 			hash);
 	}
+	initModule(params);
 	return hash;
 }
 #endif
