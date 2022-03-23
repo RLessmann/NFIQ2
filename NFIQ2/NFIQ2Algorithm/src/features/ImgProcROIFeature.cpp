@@ -108,8 +108,8 @@ NFIQ2::QualityFeatures::ImgProcROIFeature::getQualityFeatureIDs()
 }
 
 NFIQ2::QualityFeatures::ImgProcROIFeature::ImgProcROIResults
-NFIQ2::QualityFeatures::ImgProcROIFeature::computeROI(cv::Mat &img,
-    unsigned int bs)
+NFIQ2::QualityFeatures::ImgProcROIFeature::computeROI(
+    cv::Mat &img, unsigned int bs)
 {
 	ImgProcROIResults roiResults;
 
@@ -167,8 +167,8 @@ NFIQ2::QualityFeatures::ImgProcROIFeature::computeROI(cv::Mat &img,
 		// execute flood fill algorithm starting with discovered seed
 		// and save flooded area on copied image
 		cv::Rect rect;
-		cv::floodFill(ffImg, point, cv::Scalar(255, 255, 255, 0),
-		    &rect);
+		cv::floodFill(
+		    ffImg, point, cv::Scalar(255, 255, 255, 0), &rect);
 		vecRects.push_back(rect);
 		vecPoints.push_back(point);
 	}
@@ -224,8 +224,8 @@ NFIQ2::QualityFeatures::ImgProcROIFeature::computeROI(cv::Mat &img,
 			if (((int)threshImg2.at<uchar>(i, j)) == 0) {
 				// get gray value of original image (0 = black,
 				// 255 = white)
-				unsigned int x = (unsigned int)img.at<uchar>(i,
-				    j);
+				unsigned int x = (unsigned int)img.at<uchar>(
+				    i, j);
 				sumSquare += (((double)x - meanOfROIPixels) *
 				    ((double)x - meanOfROIPixels));
 			}
@@ -286,8 +286,8 @@ NFIQ2::QualityFeatures::ImgProcROIFeature::computeROI(cv::Mat &img,
 }
 
 bool
-NFIQ2::QualityFeatures::ImgProcROIFeature::isBlackPixelAvailable(cv::Mat &img,
-    cv::Point &point)
+NFIQ2::QualityFeatures::ImgProcROIFeature::isBlackPixelAvailable(
+    cv::Mat &img, cv::Point &point)
 {
 	bool found = false;
 	for (int i = 0; i < img.rows; i++) {

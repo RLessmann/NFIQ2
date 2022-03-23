@@ -108,23 +108,23 @@ NFIQ2::QualityFeatures::FingerJetFXFeature::computeFeatureData(
 		    fingerprintImage.width, CV_8UC1,
 		    (uint8_t *)fingerprintImage.data());
 
-		biggerImageCV = cv::Mat(std::max(fingerprintImage.height,
-					    fingerJetMinHeight),
+		biggerImageCV = cv::Mat(
+		    std::max(fingerprintImage.height, fingerJetMinHeight),
 		    std::max(fingerprintImage.width, fingerJetMinWidth),
 		    CV_8UC1);
 		static const uint8_t whitePixel { 255 };
 		biggerImageCV = whitePixel;
-		originalImage.copyTo(biggerImageCV(cv::Rect(0, 0,
-		    fingerprintImage.width, fingerprintImage.height)));
+		originalImage.copyTo(biggerImageCV(cv::Rect(
+		    0, 0, fingerprintImage.width, fingerprintImage.height)));
 	}
 
 	std::pair<std::string, double> fd_min_cnt;
-	fd_min_cnt =
-	    std::make_pair(Identifiers::QualityFeatures::Minutiae::Count, 0);
+	fd_min_cnt = std::make_pair(
+	    Identifiers::QualityFeatures::Minutiae::Count, 0);
 
 	std::pair<std::string, double> fd_min_cnt_comrect200x200;
-	fd_min_cnt_comrect200x200 =
-	    std::make_pair(Identifiers::QualityFeatures::Minutiae::CountCOM, 0);
+	fd_min_cnt_comrect200x200 = std::make_pair(
+	    Identifiers::QualityFeatures::Minutiae::CountCOM, 0);
 
 	NFIQ2::Timer timer;
 	timer.start();
@@ -176,8 +176,8 @@ NFIQ2::QualityFeatures::FingerJetFXFeature::computeFeatureData(
 	}
 
 	unsigned int minCnt { 0 };
-	const FRFXLL_RESULT fxResMin = FRFXLLGetMinutiaInfo(hFeatureSet,
-	    &minCnt, nullptr);
+	const FRFXLL_RESULT fxResMin = FRFXLLGetMinutiaInfo(
+	    hFeatureSet, &minCnt, nullptr);
 	if (!FRFXLL_SUCCESS(fxResMin)) {
 		FRFXLLCloseHandle(&hFeatureSet);
 		throw NFIQ2::Exception(
@@ -195,8 +195,8 @@ NFIQ2::QualityFeatures::FingerJetFXFeature::computeFeatureData(
 		    "Could not allocate space for extracted minutiae records.");
 	}
 
-	const FRFXLL_RESULT fxResData = FRFXLLGetMinutiae(hFeatureSet,
-	    BASIC_19794_2_MINUTIA_STRUCT, &minCnt, mdata.get());
+	const FRFXLL_RESULT fxResData = FRFXLLGetMinutiae(
+	    hFeatureSet, BASIC_19794_2_MINUTIA_STRUCT, &minCnt, mdata.get());
 	if (!FRFXLL_SUCCESS(fxResData)) {
 		FRFXLLCloseHandle(&hFeatureSet);
 		throw NFIQ2::Exception(
@@ -215,8 +215,8 @@ NFIQ2::QualityFeatures::FingerJetFXFeature::computeFeatureData(
 				continue;
 		}
 
-		this->minutiaData_.emplace_back(static_cast<unsigned int>(
-						    mdata[i].x),
+		this->minutiaData_.emplace_back(
+		    static_cast<unsigned int>(mdata[i].x),
 		    static_cast<unsigned int>(mdata[i].y),
 		    static_cast<unsigned int>(mdata[i].a),
 		    static_cast<unsigned int>(mdata[i].q),
@@ -250,8 +250,8 @@ NFIQ2::QualityFeatures::FingerJetFXFeature::computeFeatureData(
 	rect200x200.height = 200;
 	vecRectDimensions.push_back(rect200x200);
 
-	FingerJetFXFeature::FJFXROIResults roiResults = computeROI(32,
-	    fingerprintImage, vecRectDimensions);
+	FingerJetFXFeature::FJFXROIResults roiResults = computeROI(
+	    32, fingerprintImage, vecRectDimensions);
 	double noOfMinInRect200x200 = 0;
 	for (unsigned int i = 0;
 	     i < roiResults.vecNoOfMinutiaeInRectangular.size(); i++) {
